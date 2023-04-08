@@ -19,6 +19,31 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    //all new pages start showing top
+    useEffect(()=>{
+      window.scrollTo(0,0);
+    },[location])
+
+    const controlNavBar = () =>{
+        if(window.scrollY > 200){
+          if(window.scrollY > lastScrollY && !mobileMenu){
+            setShow("hide")
+          }else{
+            setShow("show")
+          }
+          setLastScrollY(window.scrollY);
+        }else{
+          setShow("top");
+        }
+    }
+
+    useEffect(()=>{
+      window.addEventListener("scroll",controlNavBar)
+      return ()=>{
+        window.removeEventListener("scroll",controlNavBar)
+      }
+    },[lastScrollY])
+
     const openSearch = () =>{
       setMobileMenu(false);
       setShowSearch(true)
