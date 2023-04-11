@@ -21,7 +21,14 @@ const Carousel = ({data,loading}) => {
     const navigate = useNavigate()
 
     const navigation = (dir)=>{
+      const container = carouselContainer.current;
 
+      const scrollAmount = dir === "left" ? container.scrollLeft - (container.offsetWidth + 20) : container.scrollLeft + (container.offsetWidth + 20);
+
+      container.scrollTo({
+        left: scrollAmount,
+        behavior: "smooth"
+      });
     }
 
     //skeleton item
@@ -43,11 +50,11 @@ const Carousel = ({data,loading}) => {
             <BsFillArrowLeftCircleFill className="carouselLeftNav arrow" onClick={()=> navigation("left")}/>
             <BsFillArrowRightCircleFill className="carouselRighttNav arrow" onClick={()=> navigation("right")}/>
             {!loading ? (
-              <div className="carouselItems">
+              <div className="carouselItems" ref={carouselContainer}>
                 {data?.map((item)=>{
                   const posterUrl = item.poster_path ? url.poster + item.poster_path : PosterFallback
                   return (
-                    <div className="carouselItem" key={item.id} >
+                    <div className="carouselItem" key={item.id} onClick={()=> navigate(`/${item.media_type}/${item.id}`)} >
                       <div className="posterBlock">
                         <Img src={posterUrl}/>
                         <CircleRating rating={item.vote_average.toFixed(1)}/>
